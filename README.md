@@ -1,6 +1,25 @@
 # https-github.com-moodi112-moodi112
 Ok # In your README.md, at the top:
 
+
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"                # Location of requirements.txt
+    schedule:
+      interval: "daily"          # Check every day
+    open-pull-requests-limit: 5
+    # Optionally ignore major upgrades until manually approved:
+    # allow:
+    #   - dependency-type: "direct"
+    #     update-types: ["version-update:semver-major"]
+  # GitHub Actions versions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
 name: CI Pipeline
 
 on:
