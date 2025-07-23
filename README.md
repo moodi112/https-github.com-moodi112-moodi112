@@ -1,5 +1,10 @@
-# https-github.com-moodi112-moodi112
+# https-github.com-moodi112-moodi112m
 Ok # In your README.md, at the top:
+[rules]
+  description = "Custom API key pattern"
+  regex = '''aws_[A-Z0-9]{20}'''
+  tags = ["key", "custom"]
+
 name: “CodeQL Security Scan”
 on:
   push:
