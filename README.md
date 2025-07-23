@@ -1,7 +1,70 @@
 # https-github.com-moodi112-moodi112m
 Ok # In your README.md, at the top:
 [rules]
-  description = "Custom API key pattern"
+# Add this to your existing .github/workflows/python-ci.yml (or as its own file)
+
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # At 02:00 Oman time every day → 22:00 UTC previous day
+    - cron: '0 22 * * *'
+
+jobs:
+  # …your existing lint, test, coverage, secrets-scan, codeql jobs…
+
+  regression:
+    name: 🕒 Scheduled Regression
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run full test suite
+        run: pytest
+
+      - name: Run performance benchmarks
+        # Optional: requires pytest-benchmark in your requirements
+        run: |
+          pytest --benchmark-only --benchmark-save=nightly
+
+      - name: Upload benchmark artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nightly-benchmarks
+          path: .benchmarks/
+
+      - name: Notify Slack (regression)
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,workflow,job
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Teams (regression)
+        if: always()
+        uses: Ilshidur/action-msteams@v2
+        with:
+          webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          title: "Regression • ${{ job.status }} • ${{ github.repository }}"
+          summary: "Scheduled nightly regression run"
+
+  description = "Custom API 
+ykey pattern"
   regex = '''aws_[A-Z0-9]{20}'''
   tags = ["key", "custom"]
 
