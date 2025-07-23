@@ -1,6 +1,38 @@
 # https-github.com-moodi112-moodi112
 Ok # In your README.md, at the top:
+name: “CodeQL Security Scan”
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches you want to protect
+    branches: [ main ]
+  schedule:
+    - cron: '0 3 * * 0'  # weekly on Sunday at 03:00
 
+jobs:
+  analyze:
+    name: Analyze (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/analyze@v2
 
 version: 2
 updates:
