@@ -34,6 +34,24 @@ jobs:
       - name: Run CodeQL analysis
         uses: github/codeql-action/analyze@v2
 
+jobs:
+  # …existing jobs…
+
+  secrets-scan:
+    name: 🔒 Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # required for scanning full history
+
+      - name: Run Gitleaks
+        uses: zricethezav/gitleaks-action@v2
+        with:
+          config_path: .github/gitleaks.toml  # optional custom rules
+          scan_mode: filesystem
+
 version: 2
 updates:
   # Python dependencies
