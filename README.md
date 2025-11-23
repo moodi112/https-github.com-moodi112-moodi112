@@ -1,4 +1,24 @@
-# https-github.com-moodi112-moodi112m
+== Summary ==
+Profile document used as a drafting source for the Wikipedia article "Oman Events".
+
+== Source ==
+Uploaded by the contributor who used this document when drafting the article.
+
+== Date ==
+2025-11-23
+
+== Author ==
+[Provide author if known]
+
+== Licensing ==
+[Select an appropriate license. If you are the copyright holder, consider CC BY-SA 4.0 for Wikipedia compatibility.]
+
+== COI ==
+CONFLICT OF INTEREST: This file was uploaded by a contributor to the related Wikipedia draft. The uploader has disclosed a COI on the article's talk page.
+
+== Notes ==
+Replace repository references in the article draft with:
+https://commons.wikimedia.org/wiki/File:Oman_Events_Colorful_Attractive_Profile.pdf# https-github.com-moodi112-moodi112m
 Ok # In your README.md, at the top:
 [rules]
 # Add this to your existing .github/workflows/python-ci.yml (or as its own file)
