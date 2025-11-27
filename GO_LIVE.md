@@ -235,5 +235,3 @@ Your Oman Wikipe# Test article generation
 curl -X POST "https://your-app.onrender.com/generate/article" \
   -H "Content-Type: application/json" \
   -d '{"event_name": "Renaissance Day", "language": "en"}'dia Generator will be **LIVE and PUBLIC** within 5 minutes! 🚀
-
-==> Your service is live! 🎉
