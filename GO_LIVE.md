@@ -224,7 +224,10 @@ git push origin moodi112-patch-1
 ---
 
 
-## 🎉 Go Live NOW!
+https:/==> Installing dependencies...
+==> Building...
+==> Starting server...
+==> Your service is live! 🎉/oman-wiki-generator-XXXX.onrender.com## 🎉 Go Live NOW!
 
 **Fastest option**: Open [render.com](https://render.com) → Sign up → Deploy in 3 clicks!
 
@@ -232,3 +235,5 @@ Your Oman Wikipe# Test article generation
 curl -X POST "https://your-app.onrender.com/generate/article" \
   -H "Content-Type: application/json" \
   -d '{"event_name": "Renaissance Day", "language": "en"}'dia Generator will be **LIVE and PUBLIC** within 5 minutes! 🚀
+
+==> Your service is live! 🎉
