@@ -1,0 +1,440 @@
+openapi: 3.0.3
+info:
+  title: Oman Wikipedia Generator API
+  description: >
+    AI-powered article generation engine for Oman-related events,
+    venues, organizations, personalities, and cultural topics.
+  version: 1.0.0
+  contact:
+    name: Moodi Events DevOps
+    email: support@moodievents.om
+
+servers:
+  - url: https://api.omanwiki.ai/v1
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /generate/article:
+    post:
+      summary: Generate a full Wikipedia-style article
+      tags:
+        - Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        '200':
+          description: Successful article generation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /generate/summary:
+    post:
+      summary: Generate summary/introduction
+      tags:
+        - Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryRequest'
+      responses:
+        '200':
+          description: Summary returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /generate/infobox:
+    post:
+      summary: Generate a Wikipedia-compatible infobox
+      tags:
+        - Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoboxRequest'
+      responses:
+        '200':
+          description: Infobox returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoboxResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /generate/full:
+    post:
+      summary: Generate article, summary, infobox (full pack)
+      tags:
+        - Generation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FullRequest'
+      responses:
+        '200':
+          description: Full package returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /batch/generate:
+    post:
+      summary: Generate multiple articles in one request
+      tags:
+        - Batch Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRequest'
+      responses:
+        '200':
+          description: Batch results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /export:
+    post:
+      summary: Export to Markdown, HTML, or PDF
+      tags:
+        - Export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '200':
+          description: Exported content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /health:
+    get:
+      summary: Health check endpoint
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  service:
+                    type: string
+                    example: oman-wiki-generator
+
+  /languages:
+    get:
+      summary: Get supported languages
+      tags:
+        - System
+      responses:
+        '200':
+          description: List of supported languages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supported_languages:
+                    type: array
+                    items:
+                      type: string
+                    example: ["en", "ar"]
+
+  /examples:
+    get:
+      summary: Get example Oman events
+      tags:
+        - System
+      responses:
+        '200':
+          description: List of example events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+
+components:
+  schemas:
+
+    ArticleRequest:
+      type: object
+      required:
+        - event_name
+      properties:
+        event_name:
+          type: string
+          description: Name of the Oman event
+          example: "Muscat Festival"
+        context:
+          type: string
+          description: Additional context about the event
+          example: "Annual cultural and shopping festival"
+        style:
+          type: string
+          enum: [formal, casual, detailed]
+          default: formal
+          description: Writing style
+        language:
+          type: string
+          enum: [en, ar]
+          default: en
+          description: Output language
+
+    ArticleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event_name:
+          type: string
+        article:
+          type: string
+          description: Full Wikipedia-style article
+        language:
+          type: string
+
+    SummaryRequest:
+      type: object
+      required:
+        - event_name
+      properties:
+        event_name:
+          type: string
+          description: Name of the Oman event
+        max_length:
+          type: integer
+          default: 200
+          description: Maximum words in summary
+        language:
+          type: string
+          enum: [en, ar]
+          default: en
+
+    SummaryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event_name:
+          type: string
+        summary:
+          type: string
+        language:
+          type: string
+
+    InfoboxRequest:
+      type: object
+      required:
+        - event_name
+      properties:
+        event_name:
+          type: string
+          description: Name of the Oman event
+        language:
+          type: string
+          enum: [en, ar]
+          default: en
+
+    InfoboxResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event_name:
+          type: string
+        infobox:
+          type: string
+          description: Wikipedia-style infobox
+        language:
+          type: string
+
+    FullRequest:
+      type: object
+      required:
+        - event_name
+      properties:
+        event_name:
+          type: string
+        context:
+          type: string
+        style:
+          type: string
+          enum: [formal, casual, detailed]
+          default: formal
+        language:
+          type: string
+          enum: [en, ar]
+          default: en
+
+    FullResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        event_name:
+          type: string
+        article:
+          type: string
+        summary:
+          type: string
+        infobox:
+          type: string
+        language:
+          type: string
+
+    BatchRequest:
+      type: object
+      required:
+        - event_names
+      properties:
+        event_names:
+          type: array
+          items:
+            type: string
+          description: List of event names
+        output_type:
+          type: string
+          enum: [article, summary, infobox]
+          default: article
+          description: Type of content to generate
+        language:
+          type: string
+          enum: [en, ar]
+          default: en
+
+    BatchResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        output_type:
+          type: string
+        language:
+          type: string
+        count:
+          type: integer
+        results:
+          type: object
+          additionalProperties:
+            type: string
+
+    ExportRequest:
+      type: object
+      required:
+        - article
+        - title
+      properties:
+        article:
+          type: string
+          description: Article content to export
+        title:
+          type: string
+          description: Article title
+        format:
+          type: string
+          enum: [markdown, html, pdf]
+          default: html
+          description: Export format
+        infobox:
+          type: string
+          description: Optional infobox content
+        summary:
+          type: string
+          description: Optional summary
+        style:
+          type: string
+          enum: [wikipedia, modern, minimal]
+          default: wikipedia
+          description: HTML style theme
+
+    ExportResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        format:
+          type: string
+        content:
+          type: string
+          description: Exported content (for markdown/html) or file path (for pdf)
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message

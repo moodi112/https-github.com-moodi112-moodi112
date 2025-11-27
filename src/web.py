@@ -82,84 +82,227 @@ async def root():
     <html>
     <head>
         <title>Oman Wikipedia Generator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
             body {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 40px 20px;
+                line-height: 1.7;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: #333;
+                min-height: 100vh;
             }
             .container {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 60px 40px;
+            }
+            .hero {
                 background: white;
-                padding: 60px;
-                border-radius: 15px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            }
-            h1 {
-                color: #667eea;
-                font-size: 3em;
-                margin-bottom: 10px;
-            }
-            .subtitle {
-                color: #666;
-                font-size: 1.2em;
+                padding: 80px 60px;
+                border-radius: 20px;
+                box-shadow: 0 25px 80px rgba(0,0,0,0.3);
                 margin-bottom: 40px;
             }
-            .card {
-                background: #f8f9fa;
-                padding: 25px;
-                margin: 20px 0;
-                border-radius: 10px;
-                border-left: 4px solid #667eea;
+            .hero h1 {
+                font-size: 3.5em;
+                color: #667eea;
+                margin-bottom: 15px;
+                font-weight: 800;
+                letter-spacing: -1px;
+            }
+            .hero .tagline {
+                font-size: 1.4em;
+                color: #764ba2;
+                margin-bottom: 30px;
+                font-weight: 600;
+                font-style: italic;
+            }
+            .hero .description {
+                font-size: 1.1em;
+                color: #555;
+                line-height: 1.8;
+                margin-bottom: 30px;
+            }
+            .hero .description strong {
+                color: #667eea;
+            }
+            .cta-box {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+                padding: 40px;
+                border-radius: 15px;
+                margin: 40px 0;
+                text-align: center;
+            }
+            .cta-box h2 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            .cta-box p {
+                font-size: 1.2em;
+                margin-bottom: 30px;
+                opacity: 0.95;
+            }
+            .cta-buttons {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .btn {
+                display: inline-block;
+                padding: 15px 35px;
+                background: white;
+                color: #764ba2;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 1.1em;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+            }
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+                margin: 40px 0;
+            }
+            .feature-card {
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease;
+            }
+            .feature-card:hover {
+                transform: translateY(-5px);
+            }
+            .feature-card h3 {
+                color: #667eea;
+                font-size: 1.5em;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .feature-card ul {
+                list-style: none;
+                padding: 0;
+            }
+            .feature-card li {
+                padding: 8px 0;
+                padding-left: 25px;
+                position: relative;
+            }
+            .feature-card li:before {
+                content: "→";
+                position: absolute;
+                left: 0;
+                color: #764ba2;
+                font-weight: bold;
             }
             .endpoint {
                 font-family: 'Courier New', monospace;
-                background: #e9ecef;
-                padding: 3px 8px;
-                border-radius: 4px;
+                background: #f0f0f0;
+                padding: 4px 10px;
+                border-radius: 5px;
+                font-size: 0.9em;
+                color: #764ba2;
             }
-            a {
-                color: #667eea;
-                text-decoration: none;
+            .footer {
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+                text-align: center;
+                margin-top: 40px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             }
-            a:hover {
-                text-decoration: underline;
+            .footer p {
+                color: #666;
+                font-size: 1em;
+            }
+            .footer .legacy {
+                color: #764ba2;
+                font-weight: 600;
+                font-style: italic;
+                margin-top: 10px;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>🇴🇲 Oman Wikipedia Generator</h1>
-            <p class="subtitle">AI-powered Wikipedia article generation for Oman events</p>
-            
-            <div class="card">
-                <h3>📖 API Documentation</h3>
-                <p>Interactive API documentation: <a href="/docs">/docs</a></p>
-                <p>Alternative docs: <a href="/redoc">/redoc</a></p>
+            <div class="hero">
+                <h1>🇴🇲 Oman Wikipedia Generator</h1>
+                <p class="tagline">Document Oman. One API call at a time.</p>
+                <div class="description">
+                    <p>Oman has stories worth archiving — festivals that shaped a decade, venues that defined a generation, and creators who carried the culture. This engine captures all of it.</p>
+                    <br>
+                    <p>Meet the <strong>AI-powered Wikipedia generator</strong> built for <strong>Oman's events, history, and cultural ecosystem</strong>. Fast. Neutral. Ministry-friendly. Encyclopedia-clean.</p>
+                </div>
             </div>
-            
-            <div class="card">
-                <h3>🚀 Available Endpoints</h3>
-                <ul>
-                    <li><strong>POST</strong> <span class="endpoint">/generate/article</span> - Generate full article</li>
-                    <li><strong>POST</strong> <span class="endpoint">/generate/summary</span> - Generate summary</li>
-                    <li><strong>POST</strong> <span class="endpoint">/generate/infobox</span> - Generate infobox</li>
-                    <li><strong>POST</strong> <span class="endpoint">/generate/full</span> - Generate complete package</li>
-                    <li><strong>POST</strong> <span class="endpoint">/batch/generate</span> - Batch generation</li>
-                    <li><strong>POST</strong> <span class="endpoint">/export</span> - Export to formats</li>
-                </ul>
+
+            <div class="cta-box">
+                <h2>Ready to Deploy?</h2>
+                <p>Your legacy is one request away.</p>
+                <div class="cta-buttons">
+                    <a href="/docs" class="btn">📖 API Docs</a>
+                    <a href="/examples" class="btn">💡 Examples</a>
+                    <a href="/redoc" class="btn">📚 ReDoc</a>
+                </div>
             </div>
-            
-            <div class="card">
-                <h3>🌐 Supported Languages</h3>
-                <p>English (en) • Arabic (ar)</p>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🚀 What It Does</h3>
+                    <ul>
+                        <li>Generates <strong>full Wikipedia-style articles</strong></li>
+                        <li>Builds <strong>infoboxes</strong> like a seasoned archivist</li>
+                        <li>Summarizes content for <strong>press, decks, media</strong></li>
+                        <li>Outputs <strong>Markdown, HTML, and PDF</strong></li>
+                        <li>Handles <strong>English + Arabic</strong> fluently</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🧩 Who It's For</h3>
+                    <ul>
+                        <li>Event organizers</li>
+                        <li>Venues</li>
+                        <li>Government cultural departments</li>
+                        <li>Archivists</li>
+                        <li>Journalists</li>
+                        <li>Agencies & media teams</li>
+                    </ul>
+                    <p style="margin-top: 20px; color: #666; font-style: italic;">If you shape the culture, this API documents it.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📦 The Stack</h3>
+                    <ul>
+                        <li><span class="endpoint">/generate/article</span> → Full article</li>
+                        <li><span class="endpoint">/generate/summary</span> → Executive intro</li>
+                        <li><span class="endpoint">/generate/infobox</span> → Structured data</li>
+                        <li><span class="endpoint">/generate/full</span> → The complete pack</li>
+                        <li><span class="endpoint">/batch/generate</span> → Bulk creation</li>
+                        <li><span class="endpoint">/export</span> → Clean output-ready files</li>
+                    </ul>
+                </div>
             </div>
-            
-            <div class="card">
-                <h3>📦 Export Formats</h3>
-                <p>Markdown • HTML • PDF</p>
+
+            <div class="footer">
+                <p>🏛️ <strong>Built with Respect</strong></p>
+                <p>Omani heritage at the foundation. Modern automation at the edge.</p>
+                <p class="legacy">Your narrative — preserved with precision.</p>
             </div>
         </div>
     </body>

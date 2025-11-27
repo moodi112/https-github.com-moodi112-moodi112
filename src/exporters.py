@@ -2,9 +2,15 @@
 Export formatters for Wikipedia articles in various formats.
 """
 import markdown
-from weasyprint import HTML
 from jinja2 import Template
 from typing import Dict, Optional
+
+# Make weasyprint optional for systems without required dependencies
+try:
+    from weasyprint import HTML
+    WEASYPRINT_AVAILABLE = True
+except (ImportError, OSError):
+    WEASYPRINT_AVAILABLE = False
 
 
 class ExportFormatter:
@@ -146,6 +152,14 @@ class ExportFormatter:
         Returns:
             Path to the generated PDF file.
         """
+        if not WEASYPRINT_AVAILABLE:
+            raise RuntimeError(
+                "PDF export requires WeasyPrint and its dependencies. "
+                "On Windows, you'll need to install GTK3. "
+                "See: https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#windows "
+                "Alternatively, use Docker to run the application with all dependencies."
+            )
+        
         # First convert to HTML
         html_content = ExportFormatter.to_html(article, title, infobox, summary, style="minimal")
         
