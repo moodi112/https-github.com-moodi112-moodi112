@@ -47,10 +47,13 @@ htmlcov/
 
 # Output files
 output/
-*.txt
+# *.txt - COMMENTED OUT: We need requirements.txt for Docker build
 *.html
 *.pdf
 *.md.generated
+
+# Explicitly allow requirements.txt (must be included for pip install)
+!requirements.txt
 
 # OS
 .DS_Store
