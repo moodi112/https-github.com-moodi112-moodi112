@@ -1,0 +1,35 @@
+[flake8]
+# Match Black's default line length
+max-line-length = 88
+
+# Ignore errors that conflict with Black
+extend-ignore = 
+    E203,  # Whitespace before ':'
+    E266,  # Too many leading '#' for block comment
+    W503,  # Line break before binary operator (conflicts with Black)
+    W504,  # Line break after binary operator
+
+# Exclude common directories
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    ENV,
+    build,
+    dist,
+    *.egg-info,
+    .pytest_cache,
+    .tox,
+    htmlcov,
+    .coverage
+
+# Maximum complexity
+max-complexity = 10
+
+# Show source code for each error
+show-source = True
+
+# Show error codes in output
+show-pep8 = True
