@@ -42,7 +42,8 @@ LABEL maintainer="moodi112"
 LABEL description="Oman Wikipedia Generator - AI-powered article generation"
 LABEL version="1.0.0"
 
-# Web interface stage (for future FastAPI app)
+# Web interface stage (for production FastAPI app)
 FROM base as web
 EXPOSE 8000
-CMD ["uvicorn", "src.web:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use PORT environment variable from Render, default to 8000 for local
+CMD uvicorn src.web:app --host 0.0.0.0 --port ${PORT:-8000}
