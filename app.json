@@ -1,0 +1,32 @@
+{
+  "name": "oman-wiki-generator",
+  "description": "AI-powered Wikipedia article generator for Oman events",
+  "keywords": ["openai", "wikipedia", "generator", "fastapi"],
+  "website": "https://github.com/moodi112/https-github.com-moodi112-moodi112",
+  "repository": "https://github.com/moodi112/https-github.com-moodi112-moodi112",
+  "logo": "",
+  "success_url": "/",
+  "stack": "container",
+  "env": {
+    "OPENAI_API_KEY": {
+      "description": "Your OpenAI API key for GPT models",
+      "required": true
+    },
+    "OPENAI_MODEL": {
+      "description": "OpenAI model to use (gpt-4, gpt-3.5-turbo, etc.)",
+      "value": "gpt-4",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

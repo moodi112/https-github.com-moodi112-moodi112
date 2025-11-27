@@ -1,6 +1,12 @@
 # Python Project with CI/CD Pipeline
 
-This repository contains Python projects with automated CI/CD pipeline including linting, testing, and coverage reporting.
+![CI Pipeline](https://github.com/moodi112/https-github.com-moodi112-moodi112/workflows/CI%20Pipeline/badge.svg)
+[![codecov](https://codecov.io/gh/moodi112/https-github.com-moodi112-moodi112/branch/main/graph/badge.svg)](https://codecov.io/gh/moodi112/https-github.com-moodi112-moodi112)
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
+
+This repository contains Python projects with automated CI/CD pipeline including linting, testing, security scanning, and coverage reporting.
 
 ## Projects
 
@@ -101,6 +107,33 @@ black .
 flake8 .
 ```
 
+### Security Scanning
+```bash
+# Run Bandit
+bandit -r src/
+
+# Check dependencies
+safety check
+```
+
+### Docker
+
+Build and run with Docker:
+```bash
+# Build image
+docker build -t oman-wiki-generator .
+
+# Run CLI command
+docker run --rm -v $(pwd)/output:/app/output oman-wiki-generator \
+  python -m src.cli article "Muscat Festival"
+
+# Run tests in container
+docker-compose run test
+
+# Start web interface
+docker-compose up wiki-web
+```
+
 ## CI/CD Pipeline
 
 This project uses GitHub Actions for continuous integration:
@@ -119,10 +152,20 @@ This project uses GitHub Actions for continuous integration:
    - Generates JUnit XML reports
    - Caches pip dependencies
 
-3. **Coverage** 📊
+3. **Security** 🔒
+   - Runs Bandit security scanner
+   - Checks dependencies with Safety
+   - Generates security reports
+
+4. **Coverage** 📊
    - Runs tests with coverage
    - Uploads to Codecov
    - Final notifications
+
+5. **Docker** 🐳
+   - Builds Docker images
+   - Runs tests in containers
+   - Validates containerization
 
 ### Notifications
 
@@ -198,7 +241,8 @@ See [WEBHOOK_SETUP.md](WEBHOOK_SETUP.md) for webhook configuration details.
 
 ## CI Badge
 
-![Matrix Python CI](https://github.com/moodi112/https-github.com-moodi112-moodi112/workflows/Matrix%20Python%20CI/badge.svg)
+![CI Pipeline](https://github.com/moodi112/https-github.com-moodi112-moodi112/workflows/CI%20Pipeline/badge.svg)
+[![codecov](https://codecov.io/gh/moodi112/https-github.com-moodi112-moodi112/branch/main/graph/badge.svg)](https://codecov.io/gh/moodi112/https-github.com-moodi112-moodi112)
 
 ## License
 

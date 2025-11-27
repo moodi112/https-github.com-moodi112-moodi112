@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # CLI application
+  wiki-generator:
+    build:
+      context: .
+      target: production
+    container_name: oman-wiki-generator
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+    volumes:
+      - ./output:/app/output
+      - ./.env:/app/.env:ro
+    command: python -m src.cli article "Muscat Festival" --output /app/output/muscat_festival.txt
+    networks:
+      - wiki-network
+
+  # Web interface (for future FastAPI app)
+  wiki-web:
+    build:
+      context: .
+      target: web
+    container_name: oman-wiki-web
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+    volumes:
+      - ./output:/app/output
+      - ./.env:/app/.env:ro
+    networks:
+      - wiki-network
+    restart: unless-stopped
+
+  # Test runner
+  test:
+    build:
+      context: .
+      target: base
+    container_name: oman-wiki-test
+    command: pytest tests/ -v --cov=src --cov-report=html --cov-report=term
+    volumes:
+      - ./htmlcov:/app/htmlcov
+    networks:
+      - wiki-network
+
+networks:
+  wiki-network:
+    driver: bridge
+
+volumes:
+  output:
