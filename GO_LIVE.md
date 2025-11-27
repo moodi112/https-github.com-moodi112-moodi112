@@ -223,8 +223,12 @@ git push origin moodi112-patch-1
 
 ---
 
+
 ## 🎉 Go Live NOW!
 
 **Fastest option**: Open [render.com](https://render.com) → Sign up → Deploy in 3 clicks!
 
-Your Oman Wikipedia Generator will be **LIVE and PUBLIC** within 5 minutes! 🚀
+Your Oman Wikipe# Test article generation
+curl -X POST "https://your-app.onrender.com/generate/article" \
+  -H "Content-Type: application/json" \
+  -d '{"event_name": "Renaissance Day", "language": "en"}'dia Generator will be **LIVE and PUBLIC** within 5 minutes! 🚀
