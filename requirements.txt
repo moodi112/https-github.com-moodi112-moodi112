@@ -6,7 +6,7 @@ flake8>=6.0.0
 codecov>=2.1.13
 
 # Add your project dependencies below
-# Example:
-# requests>=2.31.0
-# numpy>=1.24.0
-# pandas>=2.0.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+click>=8.1.0
+requests>=2.31.0

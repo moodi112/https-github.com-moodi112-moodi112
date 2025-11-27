@@ -1,155 +1,218 @@
-# https-github.com-moodi112-moodi112
-Ok # In your README.md, at the top:
+# Python Project with CI/CD Pipeline
 
-name: CI Pipeline
+This repository contains Python projects with automated CI/CD pipeline including linting, testing, and coverage reporting.
 
-on:
-  push:
-  pull_request:
+## Projects
 
-jobs:
+### 1. Calculator Module
+A simple calculator module with basic arithmetic operations.
 
-  lint:
-    name: 📝 Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+### 2. Oman Events Wikipedia Generator
+A CLI tool that generates Wikipedia-style articles about Oman events using OpenAI's GPT models.
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+**Quick Start:**
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-      - name: Install lint tools
-        run: pip install black flake8
+# Set up API key
+cp .env.example .env
+# Edit .env and add your OpenAI API key
 
-      - name: Run linters
-        run: |
-          black --check .
-          flake8 .
+# Generate an article
+python -m src.cli article "Muscat Festival"
 
-      # Notifications
-      - name: Notify Slack (lint)
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,commit,author,workflow,job
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+# Generate a complete package
+python -m src.cli full "National Day of Oman" -o national_day.txt
+```
 
-      - name: Notify Teams (lint)
-        if: always()
-        uses: Ilshidur/action-msteams@v2
-        with:
-          webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          title: "Lint • ${{ job.status }} • ${{ github.repository }}"
-          summary: "Lint job ${{ job.status }}"
+**Features:**
+- Full Wikipedia-style article generation
+- Event summaries
+- Infobox creation
+- Multiple output formats
+- Customizable writing styles
 
-  test:
-    name: 🧪 Test (matrix)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.9, 3.10, 3.11]
-        exclude:
-          - os: windows-latest
-            python-version: 3.9
+📖 **Full Documentation:** See [OMAN_WIKI_GENERATOR.md](OMAN_WIKI_GENERATOR.md) for detailed usage instructions.
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+## Installation
 
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+1. Clone the repository:
+```bash
+git clone https://github.com/moodi112/https-github.com-moodi112-moodi112.git
+cd https-github.com-moodi112-moodi112
+```
 
-      - name: Setup Python ${{ matrix.python-version }} on ${{ matrix.os }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+3. (Optional) For Oman Wiki Generator, set up your OpenAI API key:
+```bash
+cp .env.example .env
+# Edit .env and add: OPENAI_API_KEY=your_key_here
+```
 
-      - name: Run tests & generate JUnit XML
-        run: pytest --maxfail=1 --disable-warnings --junitxml=results/junit-${{ matrix.os }}-${{ matrix.python-version }}.xml
+## Usage Examples
 
-      - name: Upload JUnit results
-        uses: actions/upload-artifact@v3
-        with:
-          name: junit-${{ matrix.os }}-${{ matrix.python-version }}
-          path: results/junit-${{ matrix.os }}-${{ matrix.python-version }}.xml
+### Calculator
+```python
+from src.calculator import Calculator
 
-      # Notifications
-      - name: Notify Slack (test)
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,commit,author,workflow,job,matrix
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+calc = Calculator()
+result = calc.add(5, 3)  # Returns 8
+```
 
-      - name: Notify Teams (test)
-        if: always()
-        uses: Ilshidur/action-msteams@v2
-        with:
-          webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          title: "Test • ${{ job.status }} • ${{ github.repository }}"
-          summary: "OS: ${{ matrix.os }} | Python: ${{ matrix.python-version }}"
+### Oman Wiki Generator
+```bash
+# Generate article
+python -m src.cli article "Muscat Festival" --style formal
 
-  coverage:
-    name: 📊 Coverage & Report
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# Generate summary
+python -m src.cli summary "National Day of Oman" --max-length 150
 
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+# Generate infobox
+python -m src.cli infobox "Salalah Tourism Festival"
 
-      - name: Install coverage tools
-        run: pip install pytest-cov codecov
+# Generate complete package
+python -m src.cli full "Oman Rally" --output oman_rally.txt
+```
 
-      - name: Run tests with coverage
-        run: pytest --cov=./ --cov-report=xml
+## Development
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
+### Running Tests
+```bash
+pytest
+```
 
-      # Final Notifications
-      - name: Notify Slack (coverage)
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,commit,author,workflow,job
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+### Running Tests with Coverage
+```bash
+pytest --cov=./
+```
 
-      - name: Notify Teams (coverage)
-        if: always()
-        uses: Ilshidur/action-msteams@v2
-        with:
-          webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          title: "Coverage • ${{ job.status }} • ${{ github.repository }}"
-          summary: "Coverage job ${{ job.status }}"
+### Code Formatting
+```bash
+black .
+```
 
-![Matrix Python CI](https://github.com/<moodi112>/<.org>/workflows/Matrix%20Python%20CI/badge.svg)
+### Linting
+```bash
+flake8 .
+```
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration:
+
+### Pipeline Jobs
+
+1. **Lint** 📝
+   - Runs Black formatter check
+   - Runs Flake8 linter
+   - Notifies Slack and Teams
+
+2. **Test** 🧪
+   - Matrix testing across multiple OS and Python versions
+   - OS: Ubuntu, macOS, Windows
+   - Python: 3.9, 3.10, 3.11
+   - Generates JUnit XML reports
+   - Caches pip dependencies
+
+3. **Coverage** 📊
+   - Runs tests with coverage
+   - Uploads to Codecov
+   - Final notifications
+
+### Notifications
+
+The pipeline sends notifications to:
+- Slack (via webhook)
+- Microsoft Teams (via webhook)
+
+Set up webhooks in repository secrets:
+- `SLACK_WEBHOOK_URL`
+- `TEAMS_WEBHOOK_URL`
+- `CODECOV_TOKEN`
+
+See [WEBHOOK_SETUP.md](WEBHOOK_SETUP.md) for webhook configuration details.
+
+## Project Structure
+
+```
+.
+├── src/
+│   ├── __init__.py
+│   ├── calculator.py          # Calculator module
+│   ├── wiki_generator.py      # Wikipedia generator core
+│   ├── cli.py                 # CLI interface
+│   └── __main__.py            # Module entry point
+├── tests/
+│   ├── __init__.py
+│   └── test_calculator.py     # Calculator tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml             # CI/CD pipeline
+├── .env.example               # Environment variables template
+├── .gitignore
+├── .flake8                    # Flake8 configuration
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+├── OMAN_WIKI_GENERATOR.md     # Wiki generator documentation
+├── WEBHOOK_SETUP.md           # Webhook setup guide
+└── LICENSE
+```
+
+## Requirements
+
+### Core Dependencies
+- Python 3.9+
+
+### Testing & Code Quality
+- pytest>=7.4.0
+- pytest-cov>=4.1.0
+- black>=23.0.0
+- flake8>=6.0.0
+- codecov>=2.1.13
+
+### Oman Wiki Generator
+- openai>=1.0.0
+- python-dotenv>=1.0.0
+- click>=8.1.0
+- requests>=2.31.0
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Code Style
+
+- Follow PEP 8 guidelines
+- Use Black for formatting
+- Write docstrings for all functions and classes
+- Add tests for new features
+
+## CI Badge
+
+![Matrix Python CI](https://github.com/moodi112/https-github.com-moodi112-moodi112/workflows/Matrix%20Python%20CI/badge.svg)
+
+## License
+
+See [LICENSE](LICENSE) file for details.
+
+## Support
+
+For issues or questions:
+- Open a GitHub issue
+- Check the documentation files
+- Review the troubleshooting sections
+
+## Acknowledgments
+
+- OpenAI for GPT models
+- GitHub Actions for CI/CD
+- All contributors to this project
